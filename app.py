@@ -439,18 +439,46 @@ if st.button("✨ Generate Your Investment Plan! ✨", key="generate_plan"):
     if response_text.startswith("Error:"):
         st.error(response_text)
     else:
+           # Extract JSON content from response
         try:
-            # Extract JSON content from response
-            if "```
-                json_content = response_text.split("```json")[1].split("```
-            elif "```" in response_text:
-                json_content = response_text.split("``````")[0]
-            else:
-                json_content = response_text
+    if "```json" in response_text:
+        # Case: Response has ```json ... ```
+        parts = response_text.split("```json")
+        if len(parts) > 1:
+            json_content = parts[1].split("```")[0]
+        else:
+            json_content = response_text
+    elif "```" in response_text:
+        # Case: Response has ``` ... ``` format without json specifier
+        parts = response_text.split("```")
+        if len(parts) > 1:
+            json_content = parts[1]
+        else:
+            json_content = response_text
+    else:
+        # Case: Plain JSON without code blocks
+        json_content = response_text
 
+    # Clean the JSON content
+    json_content = json_content.strip()
 
-                
-            investment_plan = json.loads(json_content)
+    # Parse the JSON content
+    investment_plan = json.loads(json_content)
+
+except json.JSONDecodeError as e:
+    print("JSON parsing failed:", e)
+    
+except Exception as e:
+    st.error(f"Error parsing JSON response: {str(e)}")
+    st.text(f"Raw response:\n{response_text}")
+    # Provide a fallback to show something to the user
+    investment_plan = {
+        "Understanding Your Situation": "Unable to parse the response. Please try again.",
+        "Investment Options & Potential Allocation": "Error in generating investment options.",
+        "Important Considerations": "Please check your inputs and try again.",
+        "Disclaimer": "This is an error message due to parsing issues."
+    }
+
             
             # Display results with 3D effects
             with st.container():
