@@ -459,13 +459,13 @@ if st.button("✨ Generate Your Investment Plan! ✨", key="generate_plan"):
                 # Case: Plain JSON without code blocks
                 json_content = response_text
 
-    # Clean the JSON content
-    json_content = json_content.strip()
+        # Clean the JSON content
+        json_content = json_content.strip()
 
-    # Parse the JSON content
-    investment_plan = json.loads(json_content)
+        # Parse the JSON content
+        investment_plan = json.loads(json_content)
 
-except json.JSONDecodeError as e:
+    except json.JSONDecodeError as e:
     print("JSON parsing failed:", e)
     
 except Exception as e:
