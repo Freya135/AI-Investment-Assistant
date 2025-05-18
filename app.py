@@ -441,12 +441,13 @@ if st.button("✨ Generate Your Investment Plan! ✨", key="generate_plan"):
     else:
         try:
             # Extract JSON content from response
-            if "```
-                json_content = response_text.split("```json")[1].split("```
-            elif "```" in response_text:
+            if "```json" in response_text:
                 json_content = response_text.split("``````")[0]
+            elif "```
+                json_content = response_text.split("```")[1].split("```
             else:
                 json_content = response_text
+
                 
             investment_plan = json.loads(json_content)
             
