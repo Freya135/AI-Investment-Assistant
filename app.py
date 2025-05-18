@@ -465,9 +465,6 @@ if st.button("✨ Generate Your Investment Plan! ✨", key="generate_plan"):
             # Parse the JSON content
             investment_plan = json.loads(json_content)
 
-    except json.JSONDecodeError as e:
-    print("JSON parsing failed:", e)
-    
 except Exception as e:
     st.error(f"Error parsing JSON response: {str(e)}")
     st.text(f"Raw response:\n{response_text}")
