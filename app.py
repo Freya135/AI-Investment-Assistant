@@ -441,23 +441,23 @@ if st.button("✨ Generate Your Investment Plan! ✨", key="generate_plan"):
     else:
            # Extract JSON content from response
         try:
-    if "```json" in response_text:
-        # Case: Response has ```json ... ```
-        parts = response_text.split("```json")
-        if len(parts) > 1:
-            json_content = parts[1].split("```")[0]
-        else:
-            json_content = response_text
-    elif "```" in response_text:
-        # Case: Response has ``` ... ``` format without json specifier
-        parts = response_text.split("```")
-        if len(parts) > 1:
-            json_content = parts[1]
-        else:
-            json_content = response_text
-    else:
-        # Case: Plain JSON without code blocks
-        json_content = response_text
+            if "```json" in response_text:
+                # Case: Response has ```json ... ```
+                parts = response_text.split("```json")
+                if len(parts) > 1:
+                    json_content = parts[1].split("```")[0]
+                else:
+                    json_content = response_text
+            elif "```" in response_text:
+                # Case: Response has ``` ... ``` format without json specifier
+                parts = response_text.split("```")
+                if len(parts) > 1:
+                    json_content = parts[1]
+                else:
+                    json_content = response_text
+            else:
+                # Case: Plain JSON without code blocks
+                json_content = response_text
 
     # Clean the JSON content
     json_content = json_content.strip()
