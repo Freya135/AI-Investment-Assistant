@@ -439,43 +439,27 @@ if st.button("✨ Generate Your Investment Plan! ✨", key="generate_plan"):
     if response_text.startswith("Error:"):
         st.error(response_text)
     else:
-           # Extract JSON content from response
         try:
-            if "```json" in response_text:
-                # Case: Response has ```json ... ```
+            # FIXED: Extract JSON content from response with proper string handling
+            json_content = ""
+            if "```
                 parts = response_text.split("```json")
                 if len(parts) > 1:
-                    json_content = parts[1].split("```")[0]
-                else:
-                    json_content = response_text
+                    json_parts = parts[1].split("```
+                    if len(json_parts) > 0:
+                        json_content = json_parts
             elif "```" in response_text:
-                # Case: Response has ``` ... ``` format without json specifier
-                parts = response_text.split("```")
+                parts = response_text.split("```
                 if len(parts) > 1:
                     json_content = parts[1]
-                else:
-                    json_content = response_text
             else:
-                # Case: Plain JSON without code blocks
                 json_content = response_text
-
+                
             # Clean the JSON content
             json_content = json_content.strip()
-
+            
             # Parse the JSON content
             investment_plan = json.loads(json_content)
-
-except Exception as e:
-    st.error(f"Error parsing JSON response: {str(e)}")
-    st.text(f"Raw response:\n{response_text}")
-    # Provide a fallback to show something to the user
-    investment_plan = {
-        "Understanding Your Situation": "Unable to parse the response. Please try again.",
-        "Investment Options & Potential Allocation": "Error in generating investment options.",
-        "Important Considerations": "Please check your inputs and try again.",
-        "Disclaimer": "This is an error message due to parsing issues."
-    }
-
             
             # Display results with 3D effects
             with st.container():
@@ -502,10 +486,42 @@ except Exception as e:
                     st.markdown('<p class="disclaimer">'+investment_plan["Disclaimer"]+'</p>', unsafe_allow_html=True)
                 
                 st.markdown('</div>', unsafe_allow_html=True)
+                
+        except Exception as e:
+            st.error(f"Error parsing response: {str(e)}")
+            st.text(f"Raw response:\n{response_text}")
+            # Provide a fallback to show something to the user
+            investment_plan = {
+                "Understanding Your Situation": "Unable to parse the response. Please try again.",
+                "Investment Options & Potential Allocation": "Error in generating investment options.",
+                "Important Considerations": "Please check your inputs and try again.",
+                "Disclaimer": "This is an error message due to parsing issues."
+            }
             
-        except json.JSONDecodeError:
-            st.error("Could not parse the response as JSON. Raw response:")
-            st.text(response_text)
+            with st.container():
+                st.markdown("""
+                <div class="results-container">
+                    <h2 style="text-align: center; margin-bottom: 1.5rem; color: #ff4d4d; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                        Error Processing Your Investment Plan
+                    </h2>
+                """, unsafe_allow_html=True)
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.markdown('<p class="results-header">🔍 Understanding Your Situation</p>', unsafe_allow_html=True)
+                    st.write(investment_plan["Understanding Your Situation"])
+                    
+                    st.markdown('<p class="results-header">💼 Investment Options & Potential Allocation</p>', unsafe_allow_html=True)
+                    st.write(investment_plan["Investment Options & Potential Allocation"])
+                
+                with col2:
+                    st.markdown('<p class="results-header glow-text">⚠️ Important Considerations</p>', unsafe_allow_html=True)
+                    st.write(investment_plan["Important Considerations"])
+                    
+                    st.markdown('<p class="disclaimer">'+investment_plan["Disclaimer"]+'</p>', unsafe_allow_html=True)
+                
+                st.markdown('</div>', unsafe_allow_html=True)
 
 # 3D floating footer
 with st.container():
