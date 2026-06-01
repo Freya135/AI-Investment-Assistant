@@ -437,23 +437,26 @@ if st.button("✨ Generate Your Investment Plan! ✨", key="generate_plan"):
             st.session_state.investment_plans[cache_key] = response_text
     
     if response_text.startswith("Error:"):
-        st.error(response_text)
-    else:
-        try:
-            # FIXED: Extract JSON content from response with proper string handling
-            json_content = ""
-            if "```
-                parts = response_text.split("```json")
-                if len(parts) > 1:
-                    json_parts = parts[1].split("```
-                    if len(json_parts) > 0:
-                        json_content = json_parts
-            elif "```" in response_text:
-                parts = response_text.split("```
-                if len(parts) > 1:
-                    json_content = parts[1]
-            else:
-                json_content = response_text
+    st.error(response_text)
+else:
+    try:
+        # Extract JSON content from response
+        json_content = ""
+
+        if "```json" in response_text:
+            parts = response_text.split("```json")
+            if len(parts) > 1:
+                json_parts = parts[1].split("```")
+                if len(json_parts) > 0:
+                    json_content = json_parts[0].strip()
+
+        elif "```" in response_text:
+            parts = response_text.split("```")
+            if len(parts) > 1:
+                json_content = parts[1].strip()
+
+        else:
+            json_content = response_text.strip()
                 
             # Clean the JSON content
             json_content = json_content.strip()
