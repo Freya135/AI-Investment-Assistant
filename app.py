@@ -436,10 +436,10 @@ if st.button("✨ Generate Your Investment Plan! ✨", key="generate_plan"):
             # Store in session state for even faster retrieval
             st.session_state.investment_plans[cache_key] = response_text
     
-    if response_text.startswith("Error:"):
+if response_text.startswith("Error:"):
     st.error(response_text)
 else:
-    try:
+  try:
         # Extract JSON content from response
         json_content = ""
 
